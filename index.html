@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video Feed</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: antiquewhite;
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+      }
+      h1 {
+        color: #333;
+        position: relative;
+        margin-bottom: 100px;
+      }
+      img {
+        display: none;
+        border: 2px solid #ddd;
+        margin-top: 20px;
+      }
+      .buttons {
+        margin-top: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 5px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+      }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SIGN LANGUAGE ALPHABET DETECTION</h1>
+    <h2>Video Feed</h2>
+    <div class="buttons">
+      <button id="startBtn" onclick="startVideo()">START VIDEO</button>
+      <button id="endBtn" onclick="endVideo()" disabled>END VIDEO</button>
+    </div>
+    <img
+      id="videoFeed"
+      src="{{ url_for('video_feed') }}"
+      width="640"
+      height="480"
+    />
+    <script>
+      function startVideo() {
+        fetch("/start_video", { method: "POST" })
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("videoFeed").src = "/video_feed";
+            document.getElementById("videoFeed").style.display = "block";
+            document.getElementById("startBtn").disabled = true;
+            document.getElementById("endBtn").disabled = false;
+          });
+      }
+
+      function endVideo() {
+        fetch("/end_video", { method: "POST" })
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("videoFeed").src = "";
+            document.getElementById("videoFeed").style.display = "none";
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("endBtn").disabled = true;
+          });
+      }
+    </script>
+  </body>
+</html>
